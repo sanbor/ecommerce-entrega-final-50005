@@ -1,0 +1,63 @@
+const Product = require('../models/Product');
+const User = require('../models/User');
+const EmailService = require('../services/EmailService');
+
+// Controlador para eliminar un producto
+async function deleteProduct(req, res) {
+    const productId = req.params.id;
+
+    try {
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado.' });
+        }
+
+        await Product.findByIdAndDelete(productId);
+        
+        // Verificar si el propietario del producto es un usuario premium
+        const user = await User.findById(product.ownerId);
+        if (user.rol === 'premium') {
+            // Enviar correo electrónico al usuario informándole que su producto fue eliminado
+            await EmailService.sendProductDeletedEmail(user.email, product.name);
+        }
+
+        res.json({ message: 'Producto eliminado correctamente.' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// Controlador para obtener todos los usuarios
+async function getAllUsers(req, res) {
+    try {
+        const users = await User.find({}, 'nombre correo rol'); // Solo obtenemos datos básicos
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// Controlador para eliminar usuarios inactivos
+async function deleteInactiveUsers(req, res) {
+    try {
+        const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000); // Fecha hace 2 días
+        const users = await User.find({ lastConnection: { $lt: twoDaysAgo } });
+        const deletedUserEmails = users.map(user => user.correo);
+
+        // Eliminar usuarios inactivos
+        await User.deleteMany({ lastConnection: { $lt: twoDaysAgo } });
+
+        // Enviar correos electrónicos a los usuarios cuyas cuentas han sido eliminadas
+        await EmailService.sendInactiveUserEmails(deletedUserEmails);
+
+        res.json({ message: 'Usuarios inactivos eliminados correctamente.' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+module.exports = {
+    deleteProduct,
+    getAllUsers,
+    deleteInactiveUsers
+};
