@@ -13,7 +13,7 @@ async function deleteProduct(req, res) {
         }
 
         await Product.findByIdAndDelete(productId);
-        
+
         // Verificar si el propietario del producto es un usuario premium
         const user = await User.findById(product.ownerId);
         if (user.rol === 'premium') {
@@ -41,15 +41,10 @@ async function getAllUsers(req, res) {
 async function deleteInactiveUsers(req, res) {
     try {
         const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000); // Fecha hace 2 días
-        const users = await User.find({ lastConnection: { $lt: twoDaysAgo } });
-        const deletedUserEmails = users.map(user => user.correo);
-
-        // Eliminar usuarios inactivos
-        await User.deleteMany({ lastConnection: { $lt: twoDaysAgo } });
-
+        const result = await User.deleteMany({ lastConnection: { $lt: twoDaysAgo } });
         // Enviar correos electrónicos a los usuarios cuyas cuentas han sido eliminadas
+        const deletedUserEmails = result.deletedCount.map(user => user.email);
         await EmailService.sendInactiveUserEmails(deletedUserEmails);
-
         res.json({ message: 'Usuarios inactivos eliminados correctamente.' });
     } catch (error) {
         res.status(500).json({ message: error.message });
