@@ -1,8 +1,8 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/userRoutes');
-const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/UserRoutes');
+const productRoutes = require('./routes/ProductRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +15,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
 // Conectar a la base de datos de MongoDB
-mongoose.connect('mongodb://localhost/ecommerce', {
+mongoose.connect('mongodb://127.0.0.1/ecommerce', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

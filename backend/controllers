@@ -1,6 +1,6 @@
-const Product = require('../models/Product');
-const User = require('../models/User');
-const EmailService = require('../services/EmailService');
+const Product = require('./models/product');
+const User = require('./models/User');
+const EmailService = require('./Services/EmailServices');
 
 // Controlador para eliminar un producto
 async function deleteProduct(req, res) {
