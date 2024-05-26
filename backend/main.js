@@ -1,21 +1,25 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/UserRoutes');
 const productRoutes = require('./routes/ProductRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3001;
 
 // Middleware para parsear el cuerpo de las solicitudes
 app.use(express.json());
 
-// Rutas
+// Ruta para la raíz
+app.get('/', (req, res) => {
+  res.send('¡prueba si funciona!');
+});
+
+// Rutas de usuarios y productos
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
 // Conectar a la base de datos de MongoDB
-mongoose.connect('mongodb://127.0.0.1/ecommerce', {
+mongoose.connect('mongodb://127.0.0.1:27017/ecommerce', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

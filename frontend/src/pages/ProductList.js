@@ -9,7 +9,7 @@ function ProductList() {
             .then(response => response.json())
             .then(data => setProducts(data));
     }, []);
-
+    
     const deleteProduct = (productId) => {
         fetch(`/api/products/${productId}`, { method: 'DELETE' })
             .then(response => response.json())
