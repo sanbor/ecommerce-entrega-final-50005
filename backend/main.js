@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/UserRoutes');
-const productRoutes = require('./routes/ProductRoutes');
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 const PORT = 3001;
@@ -9,12 +9,7 @@ const PORT = 3001;
 // Middleware para parsear el cuerpo de las solicitudes
 app.use(express.json());
 
-// Ruta para la raíz
-app.get('/', (req, res) => {
-  res.send('¡prueba si funciona!');
-});
-
-// Rutas de usuarios y productos
+// Rutas
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 

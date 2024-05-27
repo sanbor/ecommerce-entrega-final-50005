@@ -1,0 +1,10 @@
+
+#userList {
+    margin: 2rem 0;
+}
+
+#userList div {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}

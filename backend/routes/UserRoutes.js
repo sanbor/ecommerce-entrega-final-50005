@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers');
+const UserController = require('../controllers/userController');
 
-// Obtener todos los usuarios
-router.get('/', userController.getAllUsers);
+// Ruta para obtener todos los usuarios
+router.get('/', UserController.getAllUsers);
 
-// Eliminar usuarios inactivos
-router.delete('/inactive', userController.deleteInactiveUsers);
+// Ruta para eliminar usuarios inactivos
+router.delete('/inactive', UserController.deleteInactiveUsers);
 
 module.exports = router;
+
